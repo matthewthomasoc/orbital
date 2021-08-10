@@ -20,29 +20,21 @@ Sun_axial_period = 2.333E6 # axial rotation period, seconds
 Sun_obliquity = 0 # obliquity, rads
 
 # initialize Sun body
-#Sun = body(Sun_radius, Sun_a, Sun_e, Sun_T, Sun_i, Sun_apsidal_period, Sun_axial_prec_period, Sun_axial_period, Sun_obliquity)
+Sun = body(Sun_radius, Sun_a, Sun_e, Sun_T, Sun_i, Sun_apsidal_period, Sun_axial_prec_period, Sun_axial_period, Sun_obliquity)
 
 # Earth parameters, orbiting Sun
-'''
 Earth_radius = 6378.14 # radius, km
 Earth_a = 149.596E6 # semi-major axis
 Earth_e = 0.0167 # eccentricity
 Earth_T = 31558118.4 # period, seconds
 Earth_i = 0 # inclination, rads
 Earth_apsidal_period = 3.532032E12 # apsidal precession period, seconds
-'''
-Earth_radius = 6378.14 # radius, km
-Earth_a = None # semi-major axis
-Earth_e = None # eccentricity
-Earth_T = None # period, seconds
-Earth_i = None # inclination, rads
-Earth_apsidal_period = None # apsidal precession period, seconds
 Earth_axial_prec_period = 8.1273002E11 # axial precession period, seconds
 Earth_axial_period = 86164.0903 # axial rotation period, seconds
 Earth_obliquity = np.radians(23.4) # obliquity, rads
 
 # initialize Earth body
-Earth = body(Earth_radius, Earth_a, Earth_e, Earth_T, Earth_i, Earth_apsidal_period, Earth_axial_prec_period, Earth_axial_period, Earth_obliquity)
+Earth = body(Earth_radius, Earth_a, Earth_e, Earth_T, Earth_i, Earth_apsidal_period, Earth_axial_prec_period, Earth_axial_period, Earth_obliquity, Sun)
 
 # Moon parameters, orbiting Earth
 Moon_radius = 1737.4 # radius, km
@@ -60,9 +52,9 @@ Moon_obliquity = np.radians(1.5) # obliquity, rads
 Moon = body(Moon_radius, Moon_a, Moon_e, Moon_T, Moon_i, Moon_apsidal_period, Moon_axial_prec_period, Moon_axial_period, Moon_obliquity, Earth)
 
 # plot limits
-ax.set_xlim([-Moon_a,Moon_a])
-ax.set_ylim([-Moon_a,Moon_a])
-ax.set_zlim([-Moon_a,Moon_a])
+ax.set_xlim([-Earth_a,Earth_a])
+ax.set_ylim([-Earth_a,Earth_a])
+ax.set_zlim([-Earth_a,Earth_a])
 
 time_accel = 86400
 
@@ -75,9 +67,9 @@ while (tm.time() - start_time) * time_accel < max_time:
 	cur_time = tm.time()
 	dt = (cur_time - last_time) * time_accel
 	elapsed_time += dt
+	Sun.update(dt, ax)
 	Earth.update(dt, ax)
 	Moon.update(dt, ax)
-	#Sun.update(dt, ax)
 	plt.draw()
 	plt.pause(.01)
 	last_time = cur_time

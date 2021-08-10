@@ -8,29 +8,7 @@ from src.body.body import *
 fig = plt.figure()
 ax = plt.axes(projection = '3d')
 
-# Sun parameters, centered at 0,0,0 w/ no orbit
-Sun_radius = 696340 # radius, km
-Sun_a = None # semi-major axis
-Sun_e = None # eccentricity
-Sun_T = None # period, seconds
-Sun_i = None # inclination, rads
-Sun_apsidal_period = None # apsidal precession period, seconds
-Sun_axial_prec_period = None # axial precession period, seconds
-Sun_axial_period = 2.333E6 # axial rotation period, seconds
-Sun_obliquity = 0 # obliquity, rads
-
-# initialize Sun body
-#Sun = body(Sun_radius, Sun_a, Sun_e, Sun_T, Sun_i, Sun_apsidal_period, Sun_axial_prec_period, Sun_axial_period, Sun_obliquity)
-
 # Earth parameters, orbiting Sun
-'''
-Earth_radius = 6378.14 # radius, km
-Earth_a = 149.596E6 # semi-major axis
-Earth_e = 0.0167 # eccentricity
-Earth_T = 31558118.4 # period, seconds
-Earth_i = 0 # inclination, rads
-Earth_apsidal_period = 3.532032E12 # apsidal precession period, seconds
-'''
 Earth_radius = 6378.14 # radius, km
 Earth_a = None # semi-major axis
 Earth_e = None # eccentricity
@@ -64,7 +42,8 @@ ax.set_xlim([-Moon_a,Moon_a])
 ax.set_ylim([-Moon_a,Moon_a])
 ax.set_zlim([-Moon_a,Moon_a])
 
-time_accel = 86400
+# too large of a time acceleration causes major issues
+time_accel = Moon_apsidal_period / 4
 
 start_time = tm.time()
 last_time = start_time
@@ -77,7 +56,6 @@ while (tm.time() - start_time) * time_accel < max_time:
 	elapsed_time += dt
 	Earth.update(dt, ax)
 	Moon.update(dt, ax)
-	#Sun.update(dt, ax)
 	plt.draw()
 	plt.pause(.01)
 	last_time = cur_time
